@@ -10,14 +10,20 @@ body{
 }
 
 .wrapper{
-    padding: 5px;
+    /* padding: 5px; */
 
     background-color: #272727;
-    border-radius: 10px;
+    border-radius: 5px; /* 10px */
     box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
     margin: 10px;
 }
+
 .toolbar {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+
     padding: 5px;
 
     background-color: #272727;
@@ -26,10 +32,39 @@ body{
     width:70px;
     height:600px;
 }
+
 .butR{
     padding: 5px;
     width: 60px;
     height:60px;
     border-radius: 50%;
     background-color: #3a3a3a;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+span {
+    color: #C0C0C0;
+    letter-spacing: 2px;
+}
+
+.wrapper-snake {
+	border-radius: 5px;
+
+    background-color: #272727;
+    box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
+    margin: 10px;
+    background-image: url(point.svg)
+}
+
+.game-score {
+    display: flex;
+    padding-top: 25px;
 }
