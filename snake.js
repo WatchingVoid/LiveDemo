@@ -1,15 +1,13 @@
-document.querySelector('#avoid-start').addEventListener('click', function (e) {
-  const btnStart = document.getElementById('avoid-start')
+document.querySelector("#avoid-start").addEventListener("click", function (e) {
+  const btnStart = document.getElementById("avoid-start")
   btnStart.style.display = btnStart.style.display === "none" ? "block" : "none"
+
   // blocked.style.pointerEvents = blocked.style.pointerEvents === "none" ? "all" : "none"
   requestAnimationFrame( gameLoop )
 })
 
 
-document.querySelector('#avoid-restart').addEventListener('click', function (e) {
-  const btnRestart = document.getElementById('avoid-restart')
-  btnRestart.style.display = btnRestart.style.display === "none" ? "block" : ''
-  // blocked.style.pointerEvents = blocked.style.pointerEvents === "none" ? "all" : "none"
+document.querySelector("#avoid-restart").addEventListener("click", function (e) {
   refreshGame()
 })
 
@@ -43,7 +41,13 @@ let context = canvas.getContext("2d");
 scoreBlock = document.querySelector(".game-score .score-count");
 drawScore();
 
+let isPaused = false
+
 function gameLoop() {
+	if (isPaused) {
+        return;
+    }
+
   requestAnimationFrame( gameLoop );
 	if ( ++config.step < config.maxStep) {
 		return;
@@ -69,13 +73,20 @@ function drawSnake() {
 		snake.tails.pop();
 	}
 
+	let green = "#006400"
+	let lightGreen = "#00FF00"
+
 	snake.tails.forEach( function(el, index){
 		if (index == 0) {
-			context.fillStyle = "#00FF00";
+			context.beginPath();
+			context.fillStyle = lightGreen;
+			context.arc( el.x + (config.sizeCell / 2), el.y + (config.sizeCell / 2), config.sizeCell / 1.5, 0, 2 * Math.PI,)
+			context.fill()
 		} else {
-			context.fillStyle = "#006400";
+			context.fillStyle = green;
+			context.fillRect( el.x, el.y, config.sizeCell, config.sizeCell );
 		}
-		context.fillRect( el.x, el.y, config.sizeCell, config.sizeCell );
+		
 
 		if ( el.x === berry.x && el.y === berry.y ) {
 			snake.maxTails++;
@@ -96,17 +107,22 @@ function drawSnake() {
 
 function collisionBorder() {
   if (snake.x < 0) {
-		snake.x = canvas.width - config.sizeCell;
+		// snake.x = canvas.width - config.sizeCell;
+		refreshGame()
 	} else if ( snake.x >= canvas.width ) {
-		snake.x = 0;
+		// snake.x = 0;
+		refreshGame()
 	}
 
 	if (snake.y < 0) {
-		snake.y = canvas.height - config.sizeCell;
+		// snake.y = canvas.height - config.sizeCell;
+		refreshGame()
 	} else if ( snake.y >= canvas.height ) {
-		snake.y = 0;
+		// snake.y = 0;
+		refreshGame()
 	}
 }
+
 function refreshGame() {
 	score = 0;
 	drawScore();
@@ -119,28 +135,29 @@ function refreshGame() {
 	snake.dy = 0;
 
 	randomPositionBerry();
-	window.onpause(index.html)
 }
+
+let red = "#ff0000"
 
 function drawBerry() {
   context.beginPath();
-	context.fillStyle = "#ff0000";
+	context.fillStyle = red
 	context.arc( berry.x + (config.sizeCell / 2 ), berry.y + (config.sizeCell / 2 ), config.sizeBerry, 0, 2 * Math.PI );
 	context.fill();
 }
 
 function randomPositionBerry() {
-	berry.x = getRandomInt( 0, canvas.width / config.sizeCell ) * config.sizeCell;
-	berry.y = getRandomInt( 0, canvas.height / config.sizeCell ) * config.sizeCell;
+	berry.x = getRandomInt( 0, canvas.width / config.sizeCell ) * config.sizeCell
+	berry.y = getRandomInt( 0, canvas.height / config.sizeCell ) * config.sizeCell
 }
 
 function incScore() {
 	score++;
-	drawScore();
+	drawScore()
 }
 
 function drawScore() {
-	scoreBlock.innerHTML = score;
+	scoreBlock.innerHTML = score
 }
 
 function getRandomInt(min, max) {
@@ -163,18 +180,44 @@ document.addEventListener("keydown", function (e) {
 	}
 });
 
-document.addEventListener('keydown', function (e) {
+document.addEventListener("keydown", function (e) {
 	if (e.code === "ArrowLeft" && snake.dx === 0) {
-	  	snake.dx = -config.sizeCell;
+	  	snake.dx = -config.sizeCell
 	  	snake.dy = 0;
 	} else if (e.code === "ArrowUp" && snake.dy === 0) {
-	  	snake.dy = -config.sizeCell;
+	  	snake.dy = -config.sizeCell
 	  	snake.dx = 0;
 	} else if (e.code === "ArrowRight" && snake.dx === 0) {
-	  	snake.dx = config.sizeCell;
+	  	snake.dx = config.sizeCell
 	  	snake.dy = 0;
 	} else if (e.code === "ArrowDown" && snake.dy === 0) {
-	  	snake.dy = config.sizeCell;
+	  	snake.dy = config.sizeCell
 	  	snake.dx = 0;
 	}
-  });
+});
+
+document.addEventListener("keydown", function (e) {
+    if (e.code == "Space") {
+        isPaused = !isPaused
+        if (isPaused) {
+            drawPause()
+        } else {
+            clearPause()
+			requestAnimationFrame( gameLoop )
+        } 
+    }
+
+
+});
+
+function drawPause() {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    context.font = "bold 48px Arial"
+    context.textAlign = "center"
+	context.fillStyle = "#FF0000"
+    context.fillText("Pause", canvas.width / 2, canvas.height / 2)
+}
+
+function clearPause() {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+}

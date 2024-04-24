@@ -44,6 +44,43 @@ body{
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.5s;
+    position: relative;
+}
+
+.butR::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(255,255,255,0.1);
+    border-radius: 50%;
+	transition: all 0.2s;
+}
+.butR:hover::before {
+	opacity: 0 ;
+	transform: scale(0.5,0.5);
+}
+.butR::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
+	transition: all 0.3s;
+	border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+	transform: scale(1.2,1.2);
+}
+.butR:hover::after {
+	opacity: 1;
+	transform: scale(1,1);
 }
 
 a {
@@ -53,6 +90,7 @@ a {
 span {
     color: #C0C0C0;
     letter-spacing: 2px;
+    user-select: none;
 }
 
 .wrapper-snake {
@@ -61,10 +99,18 @@ span {
     background-color: #272727;
     box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
     margin: 10px;
-    background-image: url(point.svg)
+    background-image: url(point.svg);
+    border: red solid 1px;
 }
 
 .game-score {
     display: flex;
     padding-top: 25px;
+}
+
+.pause {
+    display: flex;
+    padding-top: 25px;
+    flex-direction: column;
+    align-items: center;
 }
