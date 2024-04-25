@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap");
+
 body{
     margin: 0;
     height: 100vh;
@@ -89,8 +91,12 @@ a {
 
 span {
     color: #C0C0C0;
-    letter-spacing: 2px;
+    letter-spacing: 0.9px;
     user-select: none;
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .wrapper-snake {
@@ -113,4 +119,5 @@ span {
     padding-top: 25px;
     flex-direction: column;
     align-items: center;
+    gap: 5px;
 }

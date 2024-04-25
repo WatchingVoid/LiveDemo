@@ -1,4 +1,4 @@
-document.querySelector("#avoid-start").addEventListener("click", function (e) {
+document.querySelector("#avoid-start").addEventListener("click", function () {
   const btnStart = document.getElementById("avoid-start")
   btnStart.style.display = btnStart.style.display === "none" ? "block" : "none"
 
@@ -7,7 +7,7 @@ document.querySelector("#avoid-start").addEventListener("click", function (e) {
 })
 
 
-document.querySelector("#avoid-restart").addEventListener("click", function (e) {
+const restart = document.querySelector("#avoid-restart").addEventListener("click", function () {
   refreshGame()
 })
 
@@ -27,7 +27,7 @@ const snake = {
 	dx: config.sizeCell,
 	dy: 0,
 	tails: [],
-	maxTails: 3
+	maxTails: 10
 }
 
 let berry = {
@@ -42,11 +42,16 @@ scoreBlock = document.querySelector(".game-score .score-count");
 drawScore();
 
 let isPaused = false
+let gameOver = false
 
 function gameLoop() {
 	if (isPaused) {
         return;
     }
+
+	if (gameOver) {
+		return
+	}
 
   requestAnimationFrame( gameLoop );
 	if ( ++config.step < config.maxStep) {
@@ -97,29 +102,30 @@ function drawSnake() {
 		for( let i = index + 1; i < snake.tails.length; i++ ) {
 
 			if ( el.x == snake.tails[i].x && el.y == snake.tails[i].y ) {
-				refreshGame();
+				gameOver = !gameOver
+				if (gameOver) {
+					drawOver()
+				}
 			}
-
 		}
-
 	} );
 }
 
 function collisionBorder() {
   if (snake.x < 0) {
 		// snake.x = canvas.width - config.sizeCell;
-		refreshGame()
+		drawOver()
 	} else if ( snake.x >= canvas.width ) {
 		// snake.x = 0;
-		refreshGame()
+		drawOver()
 	}
 
 	if (snake.y < 0) {
 		// snake.y = canvas.height - config.sizeCell;
-		refreshGame()
+		drawOver()
 	} else if ( snake.y >= canvas.height ) {
 		// snake.y = 0;
-		refreshGame()
+		drawOver()
 	}
 }
 
@@ -196,6 +202,19 @@ document.addEventListener("keydown", function (e) {
 	}
 });
 
+function drawOver() {
+	context.clearRect(0, 0, canvas.width, canvas.height)
+    context.font = "bold 48px Comfortaa"
+    context.textAlign = "center"
+	context.fillStyle = "#FF0000"
+    context.fillText("Game Over", canvas.width / 2, canvas.height / 2)
+	context.strokeText("Game Over", canvas.width / 2, canvas.height / 2)
+}
+
+function clearOver() {
+	context.clearRect(0, 0, canvas.width, canvas.height)
+}
+
 document.addEventListener("keydown", function (e) {
     if (e.code == "Space") {
         isPaused = !isPaused
@@ -206,16 +225,15 @@ document.addEventListener("keydown", function (e) {
 			requestAnimationFrame( gameLoop )
         } 
     }
-
-
 });
 
 function drawPause() {
     context.clearRect(0, 0, canvas.width, canvas.height)
-    context.font = "bold 48px Arial"
+    context.font = "bold 48px Comfortaa"
     context.textAlign = "center"
 	context.fillStyle = "#FF0000"
     context.fillText("Pause", canvas.width / 2, canvas.height / 2)
+	context.strokeText("Pause", canvas.width / 2, canvas.height / 2)
 }
 
 function clearPause() {
