@@ -152,6 +152,11 @@ function refreshGame() {
     gameOver = false;
     requestAnimationFrame(gameLoop);
   }
+
+  if (isPaused == true) {
+    isPaused = false
+    requestAnimationFrame(gameLoop)
+  }
 }
 
 let red = "#ff0000";
@@ -177,10 +182,23 @@ function randomPositionBerry() {
 function incScore() {
   score++;
   drawScore();
+  if(score === 50 && gameOver == false) {
+    gameOver = true
+    drawWin()
+  }
 }
 
 function drawScore() {
-  scoreBlock.innerHTML = score;
+  scoreBlock.innerHTML = `${score} /50`
+}
+
+function drawWin() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.font = "bold 48px Comfortaa";
+  context.textAlign = "center";
+  context.fillStyle = "#FF0000";
+  context.fillText("WINNER", canvas.width / 2, canvas.height / 2);
+  context.strokeText("WINNER", canvas.width / 2, canvas.height / 2);
 }
 
 function getRandomInt(min, max) {
@@ -204,16 +222,16 @@ document.addEventListener("keydown", function (e) {
 });
 
 document.addEventListener("keydown", function (e) {
-  if (e.code === "ArrowLeft" && snake.dx === 0) {
+  if (e.code == "ArrowLeft" && snake.dx == 0) {
     snake.dx = -config.sizeCell;
     snake.dy = 0;
-  } else if (e.code === "ArrowUp" && snake.dy === 0) {
+  } else if (e.code == "ArrowUp" && snake.dy == 0) {
     snake.dy = -config.sizeCell;
     snake.dx = 0;
-  } else if (e.code === "ArrowRight" && snake.dx === 0) {
+  } else if (e.code == "ArrowRight" && snake.dx == 0) {
     snake.dx = config.sizeCell;
     snake.dy = 0;
-  } else if (e.code === "ArrowDown" && snake.dy === 0) {
+  } else if (e.code == "ArrowDown" && snake.dy == 0) {
     snake.dy = config.sizeCell;
     snake.dx = 0;
   }
@@ -228,12 +246,12 @@ function drawOver() {
   context.strokeText("Game Over", canvas.width / 2, canvas.height / 2);
 }
 
-function clearOver() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
 document.addEventListener("keydown", function (e) {
-  if (e.code == "Space") {
+  let space = "Space"
+
+  if(gameOver == true || score === 50){
+    space = false
+  } else if(e.code == space){
     isPaused = !isPaused;
     if (isPaused) {
       drawPause();
