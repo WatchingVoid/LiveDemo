@@ -6,6 +6,7 @@ const ctx = convas.getContext('2d');
 
 let matrix = Array(60).fill(null).map(() => Array(80).fill(0));
 
+
 const red = '#ff0000';
 const gray = '#555555';
 
@@ -25,12 +26,13 @@ convas.addEventListener('mousemove', (e)=>{
 function drawDot(i, j, isAlive){
     const Xpx = j*10;
     const Ypx = i*10;
-    ctx.fillStyle = isAlive?red:gray;
-    ctx.shadowColor = isAlive?red:gray;
-    ctx.shadowBlur = isAlive?3:0;
+    ctx.fillStyle = isAlive ? red : gray;
+    ctx.shadowColor = isAlive ? red : gray;
+    ctx.shadowBlur = isAlive ? 3 : 0;
     ctx.beginPath();
     ctx.arc(5+Xpx, 5+Ypx, 2, 0, Math.PI*2);
     ctx.fill();
+
 }
 
 function draw(matrix){
@@ -61,6 +63,12 @@ setInterval(()=>{
     matrix = getNextStep(matrix)
 }, 1000/5)
 
-function clearMatrix(matrix){
-    matrix[i] = 0;
+function clearMatrix(){
+    ctx.clearRect(0, 0, convas.width, convas.height)
+    for (let i = 0; i < matrix.length; i++) {
+        matrix[i].fill(0)
+        isDown = false
+    }
+    draw(matrix);
 }
+
